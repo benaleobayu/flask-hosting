@@ -1,0 +1,10 @@
+.idea/
+
+.venv/
+.jetclient/
+*.env
+
+__pycache__/
+src/migrations/
+_database/
+
