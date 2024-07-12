@@ -14,7 +14,7 @@ class UserForm:
         self.password = data.get('password')
         self.email = data.get('email')
 
-@user_bp.route('/users', methods=['POST'])
+@user_bp.route('/api/users', methods=['POST'])
 def api_create_users():
     try:
         user_form = UserForm()

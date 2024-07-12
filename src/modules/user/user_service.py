@@ -30,14 +30,13 @@ class UserService:
     def create_user(name, username, email, password):
         Validator.user_validator(name, username, email, password)
 
-        user = UserRepository.create_user(
+        return UserRepository.create_user(
             name,
             username,
             email,
             password
         )
 
-        return user
 
     @staticmethod
     def get_all_users():

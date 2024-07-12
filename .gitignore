@@ -1,6 +1,7 @@
 .idea/
 
-git.jetclient/
+.jetclient/
+.jetclient-live/
 *.env
 
 migrations/
@@ -45,3 +46,9 @@ env/
 # Pipenv files
 # You can include Pipfile.lock if you want reproduc
 Pipefile.lock
+
+# somefile
+stderr.log
+
+# from hosting
+tmp/

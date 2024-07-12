@@ -9,15 +9,46 @@ from src.modules.user.user_service import UserService
 
 auth_bp = Blueprint('auth_bp', __name__)
 
-@auth_bp.route('/api/register', methods=['POST'])
-def api_register():
-    api_create_users()
+class UserForm:
+    def __init__(self):
+        data = request.get_json()
+        self.name = data.get('name')
+        self.username = data.get('username')
+        self.password = data.get('password')
+        self.email = data.get('email')
 
-@auth_bp.route('/api/login', methods=['POST'])
+@auth_bp.route('/register', methods=['POST'])
+def api_register():
+    try:
+        user_form = UserForm()
+
+        #direct to service
+        user = UserService.create_user(
+            user_form.name,
+            user_form.username,
+            user_form.email,
+            user_form.password
+        )
+
+        return jsonify({
+            'message': 'user successfully registered',
+            'status': 200,
+            'data': user.to_dict()
+        }), 200
+    except ValueError as e:
+        return jsonify({'error': {
+            'message': str(e),
+            'status': 400
+        }}), 400
+
+
+
+@auth_bp.route('/login', methods=['POST'])
 def api_login():
-    data = request.get_json()
-    username = data.get('username')
-    password = data.get('password')
+    data = UserForm()
+
+    username = data.username
+    password = data.password
 
     user = User.query.filter_by(username=username).first()
     if user and user.check_password(password):
@@ -35,7 +66,7 @@ def api_login():
             'message': 'invalid username or password'
         }}), 401
 
-@auth_bp.route('/api/refresh', methods=['POST'])
+@auth_bp.route('/refresh', methods=['POST'])
 @jwt_required(refresh=True)
 def refresh():
     current_user = get_jwt_identity()
@@ -46,7 +77,7 @@ def refresh():
     new_access_token = create_access_token(identity=current_user)
     return jsonify(access_token=new_access_token), 200
 
-@auth_bp.route('/api/logout', methods=['POST'])
+@auth_bp.route('/logout', methods=['POST'])
 @jwt_required()
 def api_logout():
     jti = get_jwt()['jti']

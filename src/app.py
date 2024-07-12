@@ -13,8 +13,8 @@ app.config.from_object(Config)
 db.init_app(app)
 migrate = Migrate(app, db)
 
-app.register_blueprint(auth_bp)
-app.register_blueprint(user_bp)
+app.register_blueprint(auth_bp, url_prefix='/auth')
+app.register_blueprint(user_bp, url_prefix='/api')
 
 connection_check()
 
