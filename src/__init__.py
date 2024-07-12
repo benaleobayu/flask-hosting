@@ -1,24 +1,22 @@
+import os
 from datetime import timedelta
 
 from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from flask_migrate import Migrate
 
 from src.models.user_model import TokenBlacklist
 
-from config import Config
-from models import db
 
 load_dotenv()
 
-
+# environment
+# os.environ['FLASK_APP'] = 'src.app'
 def create_app():
     app = Flask(__name__)
 
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=30)
-    app.config.from_object(Config)
 
     CORS(
         app,
@@ -26,8 +24,6 @@ def create_app():
         origins=['http://127.0.0.1:3000']
     )
 
-    db.init_app(app)
-    migrate = Migrate(app, db)
 
     jwt = JWTManager(app)
 
