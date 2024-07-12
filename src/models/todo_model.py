@@ -1,17 +1,31 @@
 from . import db
 from flask_login import UserMixin
 
-class Todos(UserMixin, db.Model):
+class Todo(UserMixin, db.Model):
     __tablename__ = 'todos'
 
     id = db.Column(db.Integer, primary_key=True)
-    category = db.Column(db.Integer, db.ForeignKey('todo_categories.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('todo_categories.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name = db.Column(db.String(80), nullable=False)
     description = db.Column(db.String(80))
     status = db.Column(db.Boolean, default=0)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
+
+    category = db.relationship('TodoCategory', backref=db.backref('todos', lazy=True))
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'category_id': self.category_id,
+            'user_id': self.user_id,
+            'name': self.name,
+            'description': self.description,
+            'status': self.status,
+            'category': self.category,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at,
+        }
 
     def __repr__(self):
         return f'<Todos {self.name}>'

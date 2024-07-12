@@ -1,9 +1,8 @@
 from . import db
 from flask_login import UserMixin
 
-class TodoCategories(UserMixin, db.Model):
+class TodoCategory(UserMixin, db.Model):
     __tablename__ = 'todo_categories'
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     description = db.Column(db.String(255))
@@ -20,4 +19,4 @@ class TodoCategories(UserMixin, db.Model):
         }
 
     def __repr__(self):
-        return f'<TodoCategories {self.name}>'
+        return f'<TodoCategory {self.name}>'
