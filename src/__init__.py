@@ -21,7 +21,7 @@ def create_app():
     CORS(
         app,
         support_credentials=True,
-        origins=['http://127.0.0.1:3000']
+        origins=['http://127.0.0.1:3000', ]
     )
 
 
