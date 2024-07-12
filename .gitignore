@@ -3,6 +3,7 @@
 git.jetclient/
 *.env
 
+migrations/
 src/migrations/
 _database/
 
