@@ -1,6 +1,13 @@
 import os
 import sys
 
+from src import create_app
+from src.modules.user.user_route import user_bp
+
+app = create_app()
+
+app.register_blueprint(user_bp)
+
 
 sys.path.insert(0, os.path.dirname(__file__))
 
