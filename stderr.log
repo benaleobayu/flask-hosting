@@ -863,3 +863,78 @@ Traceback (most recent call last):
                   ^^^^^^^^^^^^^^^^
 AttributeError: module 'wsgi' has no attribute 'application'
 [UID:1915][115252] Child process with pid: 120482 was killed by signal: 15, core dumped: no
+Traceback (most recent call last):
+  File "/home/brad2564/todos.brandingku.com/passenger_wsgi.py", line 1, in <module>
+    from src.app import app as application
+  File "/home/brad2564/todos.brandingku.com/src/app.py", line 6, in <module>
+    from src.modules.user.user_route import user_bp
+  File "/home/brad2564/todos.brandingku.com/src/modules/user/user_route.py", line 2, in <module>
+    from utils.exception import NotFoundError, UnauthorizeError
+ImportError: cannot import name 'NotFoundError' from 'utils.exception' (/home/brad2564/todos.brandingku.com/utils/exception.py)
+Traceback (most recent call last):
+  File "/home/brad2564/todos.brandingku.com/passenger_wsgi.py", line 1, in <module>
+    from src.app import app as application
+  File "/home/brad2564/todos.brandingku.com/src/app.py", line 6, in <module>
+    from src.modules.user.user_route import user_bp
+  File "/home/brad2564/todos.brandingku.com/src/modules/user/user_route.py", line 2, in <module>
+    from utils.exception import NotFoundError, UnauthorizeError
+ImportError: cannot import name 'NotFoundError' from 'utils.exception' (/home/brad2564/todos.brandingku.com/utils/exception.py)
+[UID:1915][150958] Child process with pid: 151129 was killed by signal: 15, core dumped: no
+Traceback (most recent call last):
+  File "/home/brad2564/todos.brandingku.com/passenger_wsgi.py", line 1, in <module>
+    from src.app import app as application
+  File "/home/brad2564/todos.brandingku.com/src/app.py", line 6, in <module>
+    from src.modules.user.user_route import user_bp
+  File "/home/brad2564/todos.brandingku.com/src/modules/user/user_route.py", line 2, in <module>
+    from utils.exception import NotFoundError, UnauthorizeError
+ImportError: cannot import name 'NotFoundError' from 'utils.exception' (/home/brad2564/todos.brandingku.com/utils/exception.py)
+[UID:1915][150958] Child process with pid: 151938 was killed by signal: 15, core dumped: no
+mysql+mysqlconnector://None:None@None/None
+mysql+mysqlconnector://brad2564_admin:Sayasapa21@brandingku.com/brad2564_todos
+Connected to MySQL Server version  5.5.5-10.5.25-MariaDB-cll-lve
+You're connected to database:  brad2564_todos
+MySQL connection is closed
+mysql+mysqlconnector://brad2564_admin:Sayasapa21@brandingku.com/brad2564_todos
+Connected to MySQL Server version  5.5.5-10.5.25-MariaDB-cll-lve
+You're connected to database:  brad2564_todos
+MySQL connection is closed
+[2024-07-12 16:50:25,798] ERROR in app: Exception on /api/register [POST]
+Traceback (most recent call last):
+  File "/home/brad2564/virtualenv/todos.brandingku.com/3.11/lib/python3.11/site-packages/flask/app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brad2564/virtualenv/todos.brandingku.com/3.11/lib/python3.11/site-packages/flask/app.py", line 883, in full_dispatch_request
+    return self.finalize_request(rv)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brad2564/virtualenv/todos.brandingku.com/3.11/lib/python3.11/site-packages/flask/app.py", line 902, in finalize_request
+    response = self.make_response(rv)
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brad2564/virtualenv/todos.brandingku.com/3.11/lib/python3.11/site-packages/flask/app.py", line 1174, in make_response
+    raise TypeError(
+TypeError: The view function for 'auth_bp.api_register' did not return a valid response. The function either returned None or ended without a return statement.
+[2024-07-12 16:51:42,969] ERROR in app: Exception on /api/register [POST]
+Traceback (most recent call last):
+  File "/home/brad2564/virtualenv/todos.brandingku.com/3.11/lib/python3.11/site-packages/flask/app.py", line 1473, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brad2564/virtualenv/todos.brandingku.com/3.11/lib/python3.11/site-packages/flask/app.py", line 883, in full_dispatch_request
+    return self.finalize_request(rv)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brad2564/virtualenv/todos.brandingku.com/3.11/lib/python3.11/site-packages/flask/app.py", line 902, in finalize_request
+    response = self.make_response(rv)
+               ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/brad2564/virtualenv/todos.brandingku.com/3.11/lib/python3.11/site-packages/flask/app.py", line 1174, in make_response
+    raise TypeError(
+TypeError: The view function for 'auth_bp.api_register' did not return a valid response. The function either returned None or ended without a return statement.
+mysql+mysqlconnector://brad2564_admin:Sayasapa21@brandingku.com/brad2564_todos
+Connected to MySQL Server version  5.5.5-10.5.25-MariaDB-cll-lve
+You're connected to database:  brad2564_todos
+MySQL connection is closed
+mysql+mysqlconnector://brad2564_admin:Sayasapa21@brandingku.com/brad2564_todos
+Connected to MySQL Server version  5.5.5-10.5.25-MariaDB-cll-lve
+You're connected to database:  brad2564_todos
+MySQL connection is closed
+mysql+mysqlconnector://brad2564_admin:Sayasapa21@brandingku.com/brad2564_todos
+Connected to MySQL Server version  5.5.5-10.5.25-MariaDB-cll-lve
+You're connected to database:  brad2564_todos
+MySQL connection is closed
