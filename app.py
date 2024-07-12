@@ -1,13 +1,19 @@
 import os
-import sys
+
+from dotenv import load_dotenv
+from flask import Flask
 
 
-sys.path.insert(0, os.path.dirname(__file__))
+load_dotenv()
+
+app = Flask(__name__)
 
 
-def application(environ, start_response):
-    start_response('200 OK', [('Content-Type', 'text/plain')])
-    message = 'It works!\n'
-    version = 'Python %s\n' % sys.version.split()[0]
-    response = '\n'.join([message, version])
-    return [response.encode()]
+
+
+@app.route('/')
+def index():
+    return "Hello, world!"
+
+if __name__ == '__main__':
+    app.run(debug=True)
