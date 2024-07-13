@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from src.modules.todo_category.category_service import TodoCategoryService
 from utils.exception import NotFoundError
+from flask_jwt_extended import jwt_required
 
 todo_category_bp = Blueprint('todo_category_bp', __name__)
 
@@ -13,6 +14,7 @@ class TodoCategoryForm:
         self.category_id = data.get('category_id')
 
 @todo_category_bp.route('/todos/categories', methods=['POST'])
+@jwt_required()
 def create_todo_category():
     try:
         form = TodoCategoryForm()
@@ -38,6 +40,7 @@ def create_todo_category():
         }), 400
 
 @todo_category_bp.route('/todos/categories', methods=['GET'])
+@jwt_required()
 def get_all_todo_categories():
     todo = TodoCategoryService.get_all_todo_category()
     return jsonify({
@@ -46,6 +49,7 @@ def get_all_todo_categories():
     }), 200
 
 @todo_category_bp.route('/todos/categories/<int:id>', methods=['GET'])
+@jwt_required()
 def get_todo_category(id):
     try:
         todo = TodoCategoryService.get_todo_category(id)
@@ -60,6 +64,7 @@ def get_todo_category(id):
         }}), 404
 
 @todo_category_bp.route('/todos/categories/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_todo_category(id):
     def update_todo():
         try:
@@ -83,6 +88,7 @@ def update_todo_category(id):
             }}), 404
 
 @todo_category_bp.route('/todos/categories/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_todo_category(id):
     try:
         TodoCategoryService.delete_todo_category(id)
