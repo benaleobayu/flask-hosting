@@ -3,7 +3,6 @@ from datetime import timedelta
 
 from dotenv import load_dotenv
 from flask import Flask
-from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
 from src.models.user_model import TokenBlacklist
@@ -17,13 +16,6 @@ def create_app():
     app = Flask(__name__)
 
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=30)
-
-    CORS(
-        app,
-        support_credentials=True,
-        origins=['http://127.0.0.1:3000', ]
-    )
-
 
     jwt = JWTManager(app)
 

@@ -1,5 +1,6 @@
 from flask_migrate import Migrate
 
+from flask_cors import CORS
 from src import create_app
 from src.config import Config
 from src.models import db
@@ -21,6 +22,12 @@ app.register_blueprint(todo_bp, url_prefix='/api')
 app.register_blueprint(todo_category_bp, url_prefix='/api')
 
 connection_check()
+
+CORS(
+    app,
+    support_credentials=True,
+    origins=['http://127.0.0.1:3000', ]
+)
 
 
 if __name__ == '__main__':

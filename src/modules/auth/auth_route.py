@@ -55,7 +55,7 @@ def api_login():
         additional_claims = {
             'name': user.name,
             'username': user.username,
-            'email': user.email,
+            'email': user.email
         }
 
         access_token = create_access_token(identity=additional_claims)
