@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from src.modules.todo.todo_service import TodoService
 from utils.exception import NotFoundError
+from flask_jwt_extended import jwt_required
 
 todo_bp = Blueprint('todo_bp', __name__)
 
@@ -14,6 +15,7 @@ class TodoForm:
 
 
 @todo_bp.route('/todos', methods=['POST'])
+@jwt_required()
 def create_todo():
     try:
         form = TodoForm()
@@ -41,15 +43,19 @@ def create_todo():
         }), 400
 
 @todo_bp.route('/todos', methods=['GET'])
+@jwt_required()
 def get_all_todos():
-    todo = TodoService.get_all_todo()
+    sort = request.args.get('sort')
+    order = request.args.get('order', 'asc')
+    todo = TodoService.get_all_todo(sort, order)
     return jsonify({
         'status': 200,
         'data': todo
     }), 200
 
 @todo_bp.route('/todos/<int:id>', methods=['GET'])
-def get_todo():
+@jwt_required()
+def get_todo(id):
     try:
         todo = TodoService.get_todo(id)
         return jsonify({
@@ -63,10 +69,12 @@ def get_todo():
         }}), 404
 
 @todo_bp.route('/todos/<int:id>', methods=['PUT'])
-def update_todo():
+@jwt_required()
+def update_todo(id):
     try:
         form = TodoForm()
-        update_todo = TodoService.update_todo(
+        data = TodoService.update_todo(
+            id,
             form.category_id,
             form.name,
             form.description,
@@ -75,7 +83,7 @@ def update_todo():
         return jsonify({
             'message': 'todo updated successfully',
             'status' : 201,
-            'data': update_todo.to_dict()
+            'data': data.to_dict()
         })
     except ValueError as e:
         return jsonify({'error': {
@@ -87,7 +95,8 @@ def update_todo():
         }}), 404
 
 @todo_bp.route('/todos/<int:id>', methods=['DELETE'])
-def delete_todo():
+@jwt_required()
+def delete_todo(id):
     try:
         TodoService.delete_todo(id)
         return jsonify({

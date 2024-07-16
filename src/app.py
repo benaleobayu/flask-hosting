@@ -1,13 +1,13 @@
+from flask_cors import CORS
 from flask_migrate import Migrate
 
-from flask_cors import CORS
 from src import create_app
 from src.config import Config
 from src.models import db
-from src.modules.user.user_route import user_bp
 from src.modules.auth.auth_route import auth_bp
 from src.modules.todo.todo_route import todo_bp
 from src.modules.todo_category.category_route import todo_category_bp
+from src.modules.user.user_route import user_bp
 from utils.check_db import connection_check
 
 app = create_app()
@@ -25,10 +25,11 @@ connection_check()
 
 CORS(
     app,
-    support_credentials=True,
-    origins=['http://127.0.0.1:3000', ]
+    supports_credentials=True,
+    origins=['http://127.0.0.1:3000'],
+    allow_headers=['Content-Type', 'Authorization'],
+    methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 )
-
 
 if __name__ == '__main__':
     app.run(debug=True)

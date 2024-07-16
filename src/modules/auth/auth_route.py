@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt, jwt_required, get_jwt_identity
 
 from src.models import db
@@ -64,7 +64,16 @@ def api_login():
     else:
         return jsonify({'error': {
             'message': 'invalid username or password'
-        }}), 401
+        }}), 404
+
+@auth_bp.route('/refresh', methods=['OPTIONS'])
+def refresh_options():
+    response = make_response()
+    response.headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:3000'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    response.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+    return response
 
 @auth_bp.route('/refresh', methods=['POST'])
 @jwt_required(refresh=True)
@@ -75,7 +84,10 @@ def refresh():
 
     print(f'refresh token for user: {current_user}')
     new_access_token = create_access_token(identity=current_user)
-    return jsonify(access_token=new_access_token), 200
+    response = jsonify(access_token=new_access_token)
+    response.headers['Access-Control-Allow-Origin'] = 'http://127.0.0.1:3000'
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    return response
 
 @auth_bp.route('/logout', methods=['POST'])
 @jwt_required()

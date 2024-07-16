@@ -21,8 +21,8 @@ class TodoCategoryService:
 
 
     @staticmethod
-    def get_all_todo_category():
-        todo_categories = TodoCategoryRepository.get_all_todo_categories()
+    def get_all_todo_category(sort=None, order='asc'):
+        todo_categories = TodoCategoryRepository.get_all_todo_categories(sort, order)
         return [todo_category.to_dict() for todo_category in todo_categories]
 
     @staticmethod
@@ -36,7 +36,7 @@ class TodoCategoryService:
     def update_todo_category(id: object, name: object, description: object) -> object:
         Validator.todo_category_validator(name, description)
 
-        data = TodoCategoryService.get_todo_category(id)
+        data = TodoCategoryRepository.get_todo_category(id)
         if not data:
             raise NotFoundError('todo_category not found')
 
@@ -55,5 +55,6 @@ class TodoCategoryService:
         data = TodoCategoryService.get_todo_category(id)
         if not data:
             raise NotFoundError('todo_category not found')
+        category = TodoCategoryRepository.delete_todo_category(id)
 
-        return data
+        return category

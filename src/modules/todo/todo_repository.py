@@ -20,9 +20,16 @@ class TodoRepository:
         return new_data
 
     @staticmethod
-    def get_all_todos():
+    def get_all_todos(sort=None, order='asc'):
         current_userId = get_jwt_identity()
-        return Todo.query.filter_by(user_id=current_userId).order_by(Todo.created_at.desc()).all()
+        query = Todo.query.filter_by(user_id=current_userId)
+        if sort:
+            if order == 'desc':
+                query = query.order_by(db.desc(getattr(Todo, sort)))
+            else:
+                query = query.order_by(db.asc(getattr(Todo, sort)))
+
+        return query.all()
 
     @staticmethod
     def get_todo(id):
@@ -41,10 +48,10 @@ class TodoRepository:
             if not todo:
                 return None
 
-            todo.name = name,
-            todo.description = description,
-            todo.status = status,
-            todo.category_id = category_id,
+            todo.name = name
+            todo.description = description
+            todo.status = status
+            todo.category_id = category_id
             todo.updated_at = db.func.now()
 
             db.session.commit()

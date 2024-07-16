@@ -27,8 +27,8 @@ class TodoService:
 
 
     @staticmethod
-    def get_all_todo():
-        todos = TodoRepository.get_all_todos()
+    def get_all_todo(sort=None, order='asc'):
+        todos = TodoRepository.get_all_todos(sort, order)
         return [todo.to_dict() for todo in todos]
 
     @staticmethod

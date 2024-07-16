@@ -15,8 +15,15 @@ class TodoCategoryRepository:
         return new_data
 
     @staticmethod
-    def get_all_todo_categories():
-        return TodoCategory.query.all()
+    def get_all_todo_categories(sort=None, order='asc'):
+        query = TodoCategory.query
+        if sort:
+            if order == 'desc':
+                query = query.order_by(db.desc(getattr(TodoCategory, sort)))
+            else:
+                query = query.order_by(db.asc(getattr(TodoCategory, sort)))
+
+        return query.all()
 
     @staticmethod
     def get_todo_category(id):
@@ -29,16 +36,16 @@ class TodoCategoryRepository:
             description,
     ):
         try:
-            todo_category = TodoCategory.query.get(id)
-            if not todo_category:
+            data = TodoCategory.query.get(id)
+            if not data:
                 return None
 
-            todo_category.name = name,
-            todo_category.description = description,
-            todo_category.updated_at = db.func.now()
+            data.name = name
+            data.description = description
+            data.updated_at = db.func.now()
 
             db.session.commit()
-            return todo_category
+            return data
 
         except Exception as e:
             db.session.rollback()

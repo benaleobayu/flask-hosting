@@ -1,9 +1,11 @@
 from flask import Blueprint, request, jsonify
-from src.modules.todo_category.category_service import TodoCategoryService
-from utils.exception import NotFoundError
 from flask_jwt_extended import jwt_required
 
+from src.modules.todo_category.category_service import TodoCategoryService
+from utils.exception import NotFoundError
+
 todo_category_bp = Blueprint('todo_category_bp', __name__)
+
 
 class TodoCategoryForm:
     def __init__(self):
@@ -13,6 +15,7 @@ class TodoCategoryForm:
         self.status = data.get('status')
         self.category_id = data.get('category_id')
 
+
 @todo_category_bp.route('/todos/categories', methods=['POST'])
 @jwt_required()
 def create_todo_category():
@@ -20,7 +23,7 @@ def create_todo_category():
         form = TodoCategoryForm()
 
         # direct to service
-        data = TodoCategoryService.create_todo_category (
+        data = TodoCategoryService.create_todo_category(
             form.name,
             form.description,
         )
@@ -39,14 +42,20 @@ def create_todo_category():
             }
         }), 400
 
+
 @todo_category_bp.route('/todos/categories', methods=['GET'])
 @jwt_required()
 def get_all_todo_categories():
-    todo = TodoCategoryService.get_all_todo_category()
+    sort = request.args.get('sort')
+    order = request.args.get('order', 'asc')
+
+    todo = TodoCategoryService.get_all_todo_category(sort, order)
+
     return jsonify({
         'status': 200,
         'data': todo
     }), 200
+
 
 @todo_category_bp.route('/todos/categories/<int:id>', methods=['GET'])
 @jwt_required()
@@ -63,29 +72,31 @@ def get_todo_category(id):
             'message': str(e)
         }}), 404
 
+
 @todo_category_bp.route('/todos/categories/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_todo_category(id):
-    def update_todo():
-        try:
-            form = TodoCategoryForm()
-            update_data = TodoCategoryService.update_todo_category(
-                form.name,
-                form.description,
-            )
-            return jsonify({
-                'message': 'todo updated successfully',
-                'status': 201,
-                'data': update_data.to_dict()
-            })
-        except ValueError as e:
-            return jsonify({'error': {
-                'message': str(e)
-            }}), 400
-        except NotFoundError as e:
-            return jsonify({'error': {
-                'message': str(e)
-            }}), 404
+    try:
+        form = TodoCategoryForm()
+        update_data = TodoCategoryService.update_todo_category(
+            id,
+            form.name,
+            form.description,
+        )
+        return jsonify({
+            'message': 'todo updated successfully',
+            'status': 201,
+            'data': update_data.to_dict()
+        })
+    except ValueError as e:
+        return jsonify({'error': {
+            'message': str(e)
+        }}), 400
+    except NotFoundError as e:
+        return jsonify({'error': {
+            'message': str(e)
+        }}), 404
+
 
 @todo_category_bp.route('/todos/categories/<int:id>', methods=['DELETE'])
 @jwt_required()
