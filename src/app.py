@@ -24,13 +24,15 @@ app.register_blueprint(todo_category_bp, url_prefix='/api')
 connection_check()
 
 devUrl = 'https://simple-todo-4klznynxv-stafakurs-projects.vercel.app/auth/register'
+prodUrl = 'https://simple-todo-three-pied.vercel.app'
 
 CORS(
     app,
     supports_credentials=True,
     origins=[
         'http://127.0.0.1:3000',
-        devUrl
+        devUrl,
+        prodUrl
     ],
     allow_headers=['Content-Type', 'Authorization'],
     methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
