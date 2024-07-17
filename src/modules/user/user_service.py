@@ -8,6 +8,9 @@ class Validator:
     def user_validator(name, username, email, password):
         if UserRepository.check_email_exist(email):
             raise ValueError('email already exist')
+        if UserRepository.check_username_exist(username):
+            raise ValueError('username already exist')
+
 
         if not name or not isinstance(name, str):
             raise ValueError('name is required')
