@@ -53,6 +53,7 @@ def api_login():
     user = User.query.filter_by(username=username).first()
     if user and user.check_password(password):
         additional_claims = {
+            'id': user.id,
             'name': user.name,
             'username': user.username,
             'email': user.email

@@ -1,17 +1,19 @@
 from flask import Blueprint, request, jsonify
-from src.modules.todo.todo_service import TodoService
-from utils.exception import NotFoundError
 from flask_jwt_extended import jwt_required
 
+from src.modules.todo.todo_service import TodoService
+from utils.exception import NotFoundError
+
 todo_bp = Blueprint('todo_bp', __name__)
+
 
 class TodoForm:
     def __init__(self):
         data = request.get_json()
+        self.category_id = data.get('category_id')
         self.name = data.get('name')
         self.description = data.get('description')
         self.status = data.get('status')
-        self.category_id = data.get('category_id')
 
 
 @todo_bp.route('/todos', methods=['POST'])
@@ -25,8 +27,10 @@ def create_todo():
             form.category_id,
             form.name,
             form.description,
-            form.status
+            form.status,
         )
+
+        print(todo)
 
         return jsonify({
             'message': 'todo created successfully',
@@ -42,6 +46,7 @@ def create_todo():
             }
         }), 400
 
+
 @todo_bp.route('/todos', methods=['GET'])
 @jwt_required()
 def get_all_todos():
@@ -52,6 +57,7 @@ def get_all_todos():
         'status': 200,
         'data': todo
     }), 200
+
 
 @todo_bp.route('/todos/<int:id>', methods=['GET'])
 @jwt_required()
@@ -68,6 +74,7 @@ def get_todo(id):
             'message': str(e)
         }}), 404
 
+
 @todo_bp.route('/todos/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_todo(id):
@@ -82,7 +89,7 @@ def update_todo(id):
         )
         return jsonify({
             'message': 'todo updated successfully',
-            'status' : 201,
+            'status': 201,
             'data': data.to_dict()
         })
     except ValueError as e:
@@ -93,6 +100,7 @@ def update_todo(id):
         return jsonify({'error': {
             'message': str(e)
         }}), 404
+
 
 @todo_bp.route('/todos/<int:id>', methods=['DELETE'])
 @jwt_required()
@@ -106,4 +114,3 @@ def delete_todo(id):
 
     except NotFoundError as e:
         return jsonify({'message': str(e)}), 404
-

@@ -12,8 +12,6 @@ class TodoCategoryForm:
         data = request.get_json()
         self.name = data.get('name')
         self.description = data.get('description')
-        self.status = data.get('status')
-        self.category_id = data.get('category_id')
 
 
 @todo_category_bp.route('/todos/categories', methods=['POST'])

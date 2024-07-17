@@ -1,20 +1,30 @@
 from src.models.todo_model import Todo, db
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import get_jwt_identity
 
 class TodoRepository:
     @staticmethod
     def create_todo(
+            category_id,
+            user_id,
             name,
             description,
             status,
-            category_id
     ):
+
+        # Print input parameters for debugging
+        print(f"category_id: {category_id}")
+        print(f"name: {name}")
+        print(f"description: {description}")
+        print(f"status: {status}")
+
         new_data = Todo(
             name=name,
             description=description,
             status=status,
-            category_id=category_id
+            category_id = category_id
         )
+        current_userId = get_jwt_identity()
+        new_data.user_id = current_userId['id']
         db.session.add(new_data)
         db.session.commit()
         return new_data
@@ -22,7 +32,7 @@ class TodoRepository:
     @staticmethod
     def get_all_todos(sort=None, order='asc'):
         current_userId = get_jwt_identity()
-        query = Todo.query.filter_by(user_id=current_userId)
+        query = Todo.query.filter_by(user_id=current_userId['id'])
         if sort:
             if order == 'desc':
                 query = query.order_by(db.desc(getattr(Todo, sort)))

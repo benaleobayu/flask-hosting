@@ -15,7 +15,7 @@ load_dotenv()
 def create_app():
     app = Flask(__name__)
 
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=30)
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=120)
 
     jwt = JWTManager(app)
 

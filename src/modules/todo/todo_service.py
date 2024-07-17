@@ -3,25 +3,28 @@ from utils.exception import NotFoundError, UnauthorizeError
 class Validator:
     @staticmethod
     def todo_validator(category_id, name, description, status):
-        if not category_id or not isinstance(category_id, int):
+        if not category_id:
             raise ValueError('category is required')
-        if not name or not isinstance(name, str):
+        if not name:
             raise ValueError('name is required')
-        if not description or not isinstance(description, str):
+        if not description:
             raise ValueError('description is required')
-        if not status or not isinstance(status, bool):
-            raise ValueError('status is required')
+
+
+        if not isinstance(category_id, int):
+            raise ValueError('category_id must be an integer')
 
 class TodoService:
     @staticmethod
-    def create_todo(category_id: object, name: object, description: object, status: object) -> object:
+    def create_todo(category_id, name, description, status, user_id=None,):
         Validator.todo_validator(category_id, name, description, status)
 
         todo = TodoRepository.create_todo(
             category_id,
+            user_id,
             name,
             description,
-            status
+            status,
         )
         return todo
 
@@ -60,8 +63,10 @@ class TodoService:
 
     @staticmethod
     def delete_todo(id):
-        data = TodoService.get_todo(id)
-        if not data:
+        find = TodoService.get_todo(id)
+        if not find:
             raise NotFoundError('todo not found')
+
+        data = TodoRepository.delete_todo(id)
 
         return data
