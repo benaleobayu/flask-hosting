@@ -35,7 +35,7 @@ CORS(
         prodUrl
     ],
     allow_headers=['Content-Type', 'Authorization'],
-    methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+    methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH']
 )
 
 if __name__ == '__main__':
