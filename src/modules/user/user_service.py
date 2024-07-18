@@ -2,6 +2,7 @@ import re
 
 from src.modules.user.user_repository import UserRepository
 from utils.exception import NotFoundError, UnauthorizeError
+from flask_jwt_extended import get_jwt_identity
 
 class Validator:
     @staticmethod
@@ -72,6 +73,26 @@ class UserService:
             return user
         except Exception as e:
             raise e
+
+    @staticmethod
+    def update_user_status(id, status):
+        data = UserService.get_user(id)
+        if not data:
+            raise NotFoundError('user not found')
+
+        user = UserRepository.update_user_status(id, status)
+        return user
+
+    @staticmethod
+    def update_user_password(id, password):
+        Validator.user_validator(password)
+
+        data = UserService.get_user(id)
+        if not data:
+            raise NotFoundError('user not found')
+
+        user = UserRepository.update_user_password(id, password)
+        return user
 
     @staticmethod
     def delete_user(id):
