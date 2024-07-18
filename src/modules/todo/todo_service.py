@@ -62,6 +62,24 @@ class TodoService:
             raise e
 
     @staticmethod
+    def update_todo_status(
+            id,
+            status
+    ):
+        data = TodoService.get_todo(id)
+        if not data:
+            raise NotFoundError('todo not found')
+
+        try:
+            todo = TodoRepository.update_todo_status(
+                id,
+                status
+            )
+            return todo
+        except Exception as e:
+            raise e
+
+    @staticmethod
     def delete_todo(id):
         find = TodoService.get_todo(id)
         if not find:

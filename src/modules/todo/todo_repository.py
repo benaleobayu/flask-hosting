@@ -71,6 +71,25 @@ class TodoRepository:
             db.session.rollback()
             raise e
 
+    @staticmethod
+    def update_todo_status(
+            id,
+            status
+    ):
+        try:
+            todo = Todo.query.get(id)
+            if not todo:
+                return None
+
+            todo.status = status
+            todo.updated_at = db.func.now()
+
+            db.session.commit()
+            return todo
+        except Exception as e:
+            db.session.rollback()
+            raise e
+
 
 
     @staticmethod

@@ -101,6 +101,28 @@ def update_todo(id):
             'message': str(e)
         }}), 404
 
+@todo_bp.route('/todos/<int:id>/status', methods=['PATCH'])
+@jwt_required()
+def update_todo_status(id):
+    try:
+        form = TodoForm()
+        TodoService.update_todo_status(
+            id,
+            form.status
+        )
+        return jsonify({
+            'message': 'todo status updated successfully',
+            'status': 201,
+        }), 201
+    except ValueError as e:
+        return jsonify({'error': {
+            'message': str(e)
+        }}), 400
+    except NotFoundError as e:
+        return jsonify({'error': {
+            'message': str(e)
+        }}), 404
+
 
 @todo_bp.route('/todos/<int:id>', methods=['DELETE'])
 @jwt_required()
