@@ -51,7 +51,7 @@ def api_login():
     password = data.password
 
     user = User.query.filter_by(username=username).first()
-    if user and user.check_password(password):
+    if user and user.check_password(password) and user.isDeleted == '0':
         additional_claims = {
             'id': user.id,
             'name': user.name,
@@ -62,6 +62,10 @@ def api_login():
         access_token = create_access_token(identity=additional_claims)
         refresh_token = create_refresh_token(identity=additional_claims)
         return jsonify(access_token=access_token, refresh_token=refresh_token), 200
+    elif user and user.check_password(password) and user.isDeleted == '1':
+        return jsonify({'error': {
+            'message': 'user is not active'
+        }}), 401
     else:
         return jsonify({'error': {
             'message': 'invalid username or password'
