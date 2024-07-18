@@ -56,6 +56,40 @@ class UserRepository:
             return e
 
     @staticmethod
+    def update_user_status(id, status):
+        try:
+            user = User.query.get(id)
+            if not user:
+                return None
+
+            user.isDeleted = status
+            user.updated_at = db.func.now()
+
+            db.session.commit()
+
+            return user
+        except Exception as e:
+            db.session.rollback()
+            return e
+
+    @staticmethod
+    def update_user_password(id, password):
+        try:
+            user = User.query.get(id)
+            if not user:
+                return None
+
+            user.set_password(password)
+            user.updated_at = db.func.now()
+
+            db.session.commit()
+
+            return user
+        except Exception as e:
+            db.session.rollback()
+            return e
+
+    @staticmethod
     def delete_user(id):
         find_id = User.query.get(id)
         try:
