@@ -7,11 +7,6 @@ from flask_jwt_extended import get_jwt_identity
 class Validator:
     @staticmethod
     def user_validator(name, username, email, password):
-        if UserRepository.check_email_exist(email):
-            raise ValueError('email already exist')
-        if UserRepository.check_username_exist(username):
-            raise ValueError('username already exist')
-
 
         if not name or not isinstance(name, str):
             raise ValueError('name is required')
@@ -29,10 +24,24 @@ class Validator:
         if not re.match(regex_email, email):
             raise ValueError('please input the valid email')
 
+    @staticmethod
+    def user_existing_username(username):
+        if UserRepository.check_username_exist(username):
+            raise ValueError('username already exist')
+
+    @staticmethod
+    def user_existing_email(email):
+        if UserRepository.check_email_exist(email):
+            raise ValueError('email already exist')
+
+
+
 class UserService:
     @staticmethod
     def create_user(name, username, email, password):
         Validator.user_validator(name, username, email, password)
+        Validator.user_existing_email(email)
+        Validator.user_existing_username(username)
 
         return UserRepository.create_user(
             name,
@@ -56,7 +65,8 @@ class UserService:
 
     @staticmethod
     def update_user(id,name,username,email, password=None):
-        Validator.user_validator(name,username,email,password)
+        Validator.user_validator(name,username,email)
+        Validator.user_existing_username(username)
 
         data = UserService.get_user(id)
         if not data:
@@ -96,8 +106,15 @@ class UserService:
 
     @staticmethod
     def delete_user(id):
-        data = UserService.get_user(id)
-        if not data:
+        find = UserService.get_user(id)
+        user = get_jwt_identity()
+        if not find:
             raise NotFoundError('user not found')
-        user = UserRepository.delete_user(id)
-        return user
+        if user['id'] != id:
+            raise UnauthorizeError('Only the owner can delete this user')
+
+        try:
+            data = UserRepository.delete_user(id)
+            return data
+        except Exception as e:
+            raise e
