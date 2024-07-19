@@ -34,6 +34,10 @@ class UserRepository:
         return User.query.all()
 
     @staticmethod
+    def get_mydata_user(id):
+        return User.query.get(id)
+
+    @staticmethod
     def get_user(id):
         return User.query.get(id)
 

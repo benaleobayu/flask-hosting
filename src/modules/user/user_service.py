@@ -57,6 +57,16 @@ class UserService:
         return [user.to_dict() for user in users]
 
     @staticmethod
+    def get_mydata_user():
+        id = get_jwt_identity()['id']
+        find_data = UserRepository.get_user(id)
+        if not find_data:
+            raise NotFoundError('user not found')
+
+        data = UserRepository.get_mydata_user(id)
+        return data
+
+    @staticmethod
     def get_user(id):
         user = UserRepository.get_user(id)
         if not user:
@@ -110,8 +120,8 @@ class UserService:
         user = get_jwt_identity()
         if not find:
             raise NotFoundError('user not found')
-        if user['id'] != id:
-            raise UnauthorizeError('Only the owner can delete this user')
+        # if user['id'] != id:
+        #     raise UnauthorizeError('Only the owner can delete this user')
 
         try:
             data = UserRepository.delete_user(id)

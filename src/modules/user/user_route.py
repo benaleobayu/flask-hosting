@@ -49,6 +49,17 @@ def api_get_users():
         'data': users
     }) if users else ('', 404)
 
+@user_bp.route('/users/data', methods=['GET'])
+@jwt_required()
+def api_get_mydata_user():
+    users = UserService.get_mydata_user()
+    return jsonify({
+        'status': 200,
+        'data': users.to_dict()
+    }) if users else ('', 404)
+
+
+
 @user_bp.route('/users/<int:id>', methods=['GET'])
 @jwt_required()
 def api_get_user(id):
