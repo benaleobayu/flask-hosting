@@ -4,8 +4,12 @@ from src.models.user_model import User, db
 class UserRepository:
 
     @staticmethod
-    def check_email_exist(email):
-        existing = User.query.filter_by(email=email).first()
+    def check_email_exist(email, user_id=None):
+        existing = User.query.filter_by(email=email)
+        if user_id:
+            existing = existing.filter(User.id != user_id)
+
+        existing = existing.first()
         return True if existing else False
 
     @staticmethod
@@ -34,23 +38,28 @@ class UserRepository:
         return User.query.get(id)
 
     @staticmethod
-    def update_user(id, name, username, email, password=None):
+    def update_user(id, name, username, email=None, password=None):
         try:
-            user = User.query.get(id)
-            if not user:
+            data = User.query.get(id)
+            if not data:
                 return None
 
-            user.name = name
-            user.username = username
-            user.email = email
-            user.updated_at = db.func.now()
+            data.name = name
+            data.username = username
+            data.updated_at = db.func.now()
+
+            if email and email != data.email:
+                if UserRepository.check_email_exist(email, id):
+                    raise ValueError('email already exist')
+
+                data.email = email
 
             if password:
-                user.set_password(password)
+                data.set_password(password)
 
             db.session.commit()
 
-            return user
+            return data
         except Exception as e:
             db.session.rollback()
             return e
@@ -62,7 +71,7 @@ class UserRepository:
             if not user:
                 return None
 
-            user.isDeleted = status
+            user.status = status
             user.updated_at = db.func.now()
 
             db.session.commit()
@@ -91,16 +100,15 @@ class UserRepository:
 
     @staticmethod
     def delete_user(id):
-        find_id = User.query.get(id)
         try:
-            if not find_id:
+            find_data = User.query.get(id)
+            if not find_data:
                 return None
 
-            user = User.query.filter_by(id=id)
-            if user:
-                db.session.delete(user)
+            if find_data:
+                db.session.delete(find_data)
                 db.session.commit()
-            return user
+            return find_data
         except Exception as e:
             db.session.rollback()
             return e
