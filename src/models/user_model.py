@@ -10,7 +10,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(255), nullable=False, unique=True)
     email = db.Column(db.String(255), nullable=False, unique=True)
     password = db.Column(db.String(255), nullable=False)
-    isDeleted = db.Column(db.String(2), default='0', nullable=True)
+    status = db.Column(db.String(2), default='0', nullable=True)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now())
 
@@ -26,7 +26,7 @@ class User(UserMixin, db.Model):
             'name': self.name,
             'username': self.username,
             'email': self.email,
-            'isDeleted': self.isDeleted,
+            'status': self.status,
             'created_at': self.created_at,
             'updated_at': self.updated_at
         }
