@@ -86,5 +86,4 @@ class TodoService:
             raise NotFoundError('todo not found')
 
         data = TodoRepository.delete_todo(id)
-
         return data
