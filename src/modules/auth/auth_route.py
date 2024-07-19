@@ -43,33 +43,43 @@ def api_register():
 
 
 
+
+from flask import request, jsonify
+from flask_jwt_extended import create_access_token, create_refresh_token
+
 @auth_bp.route('/login', methods=['POST'])
 def api_login():
-    data = UserForm()
+    data = request.get_json()
 
-    username = data.username
-    password = data.password
+    if not data or 'username' not in data or 'password' not in data:
+        return jsonify({'error': {
+            'message': 'username and password are required'
+        }}), 400
+
+    username = data['username']
+    password = data['password']
 
     user = User.query.filter_by(username=username).first()
-    if user and user.check_password(password) and user.isDeleted == '0':
-        additional_claims = {
-            'id': user.id,
-            'name': user.name,
-            'username': user.username,
-            'email': user.email
-        }
+    if user and user.check_password(password):
+        if user.status == '0':
+            additional_claims = {
+                'id': user.id,
+                'name': user.name,
+                'username': user.username,
+                'email': user.email
+            }
 
-        access_token = create_access_token(identity=additional_claims)
-        refresh_token = create_refresh_token(identity=additional_claims)
-        return jsonify(access_token=access_token, refresh_token=refresh_token), 200
-    elif user and user.check_password(password) and user.isDeleted == '1':
-        return jsonify({'error': {
-            'message': 'user is not active'
-        }}), 401
+            access_token = create_access_token(identity=additional_claims)
+            refresh_token = create_refresh_token(identity=additional_claims)
+            return jsonify(access_token=access_token, refresh_token=refresh_token), 200
+        elif user.status == '1':
+            return jsonify({'error': {
+                'message': 'user is not active'
+            }}), 400
     else:
         return jsonify({'error': {
             'message': 'invalid username or password'
-        }}), 404
+        }}), 401
 
 @auth_bp.route('/refresh', methods=['OPTIONS'])
 def refresh_options():
